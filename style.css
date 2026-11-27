@@ -1,0 +1,542 @@
+/* ==========================================================================
+   myMasterpiece — Sistem Pemantau Penulisan Karya Tulis Santri SMP DAFI
+   Theme System adapted from mahedaLab (HomePage)
+   ========================================================================== */
+
+:root {
+  --primary-red: #DC2626;
+  --primary-red-hover: #B91C1C;
+  --primary-red-light: #FEF2F2;
+  --accent-rose: #E11D48;
+  --accent-amber: #D97706;
+  --accent-ruby: #991B1B;
+  --bg-light: #F8FAFC;
+  --bg-dark: #0F172A;
+  --card-light: #FFFFFF;
+  --card-dark: #1E293B;
+  --border-light: #E2E8F0;
+  --border-dark: #334155;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.font-heading {
+  font-family: 'Quicksand', 'Plus Jakarta Sans', sans-serif;
+}
+
+.font-body {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Ambient Glow Decoration Blobs (HomePage Signature) */
+.ambient-blob-1 {
+  position: fixed;
+  top: -8%;
+  left: -8%;
+  width: 26rem;
+  height: 26rem;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.18) 0%, rgba(220, 38, 38, 0) 70%);
+  filter: blur(80px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-blob-2 {
+  position: fixed;
+  top: 18%;
+  right: -5%;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.14) 0%, rgba(225, 29, 72, 0) 70%);
+  filter: blur(80px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-blob-3 {
+  position: fixed;
+  bottom: 5%;
+  left: 20%;
+  width: 22rem;
+  height: 22rem;
+  background: radial-gradient(circle, rgba(153, 27, 27, 0.12) 0%, rgba(153, 27, 27, 0) 70%);
+  filter: blur(80px);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.45);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 38, 38, 0.65);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.55);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(239, 68, 68, 0.75);
+}
+
+/* Glassmorphism Navigation */
+.glass-nav {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Card Elevation & Tactile Buttons */
+.maheda-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.maheda-card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 30px -12px rgba(220, 38, 38, 0.14), 0 8px 14px -6px rgba(0, 0, 0, 0.04);
+}
+
+.dark .maheda-card-hover:hover {
+  box-shadow: 0 18px 30px -12px rgba(0, 0, 0, 0.5), 0 0 18px 1px rgba(220, 38, 38, 0.16);
+}
+
+.nav-tab-btn {
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.nav-tab-btn:active {
+  transform: scale(0.97);
+}
+
+/* Distraction-Free Focus Writing Mode */
+.editor-focus-mode {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 45 !important;
+  overflow-y: auto !important;
+  background: #F8FAFC !important;
+  padding: 1.5rem max(1rem, calc((100vw - 920px) / 2)) !important;
+}
+
+.dark .editor-focus-mode {
+  background: #0F172A !important;
+}
+
+.editor-focus-mode .academic-editor-shell .ql-container.ql-snow {
+  min-height: 58vh;
+  max-height: 70vh;
+}
+
+/* Modal & Toast Animations */
+@keyframes modal-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-enter {
+  animation: modal-scale-in 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes toast-slide-up {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.toast-in {
+  animation: toast-slide-up 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   Quill.js Academic Editor Overrides (Light & Dark Mode)
+   ========================================================================== */
+.academic-editor-shell .ql-toolbar.ql-snow {
+  border: 1px solid #E2E8F0;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background: #F8FAFC;
+  padding: 0.6rem 0.75rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.dark .academic-editor-shell .ql-toolbar.ql-snow {
+  border-color: #334155;
+  background: #0F172A;
+}
+
+.academic-editor-shell .ql-container.ql-snow {
+  border: 1px solid #E2E8F0;
+  border-top: none;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  background: #FFFFFF;
+  min-height: 340px;
+  max-height: 540px;
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+}
+
+.dark .academic-editor-shell .ql-container.ql-snow {
+  border-color: #334155;
+  background: #1E293B;
+  color: #F1F5F9;
+}
+
+.dark .academic-editor-shell .ql-snow .ql-stroke {
+  stroke: #CBD5E1;
+}
+
+.dark .academic-editor-shell .ql-snow .ql-fill {
+  fill: #CBD5E1;
+}
+
+.dark .academic-editor-shell .ql-snow .ql-picker {
+  color: #CBD5E1;
+}
+
+.dark .academic-editor-shell .ql-snow .ql-picker-options {
+  background: #1E293B;
+  border-color: #334155;
+}
+
+.academic-editor-shell .ql-snow button:hover .ql-stroke,
+.academic-editor-shell .ql-snow button.ql-active .ql-stroke {
+  stroke: #DC2626;
+}
+
+.academic-editor-shell .ql-snow button:hover .ql-fill,
+.academic-editor-shell .ql-snow button.ql-active .ql-fill {
+  fill: #DC2626;
+}
+
+.academic-editor-shell .ql-editor {
+  padding: 1.25rem 1.5rem;
+  line-height: 1.65;
+  min-height: 340px;
+}
+
+.academic-editor-shell .ql-editor.ql-blank::before {
+  color: #94A3B8;
+  font-style: italic;
+}
+
+/* Embedded Academic Figure & Table Formatting (Editor + Reader + Preview) */
+.academic-figure {
+  display: block;
+  margin: 1rem auto;
+  text-align: center;
+  padding: 0.75rem;
+  border: 1px dashed #CBD5E1;
+  border-radius: 0.75rem;
+  background: rgba(248, 250, 252, 0.7);
+}
+
+.dark .academic-figure {
+  border-color: #475569;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.academic-figure img {
+  max-width: min(100%, 480px);
+  max-height: 320px;
+  height: auto;
+  margin: 0 auto 0.5rem auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.academic-figure figcaption,
+.figure-caption {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  color: #334155;
+}
+
+.dark .academic-figure figcaption,
+.dark .figure-caption {
+  color: #CBD5E1;
+}
+
+.academic-table-wrap {
+  margin: 1rem auto;
+  overflow-x: auto;
+}
+
+.academic-table-wrap .table-caption {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.4rem;
+  color: #1E293B;
+}
+
+.dark .academic-table-wrap .table-caption {
+  color: #E2E8F0;
+}
+
+.academic-table-wrap table,
+.reader-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  font-size: 0.84rem;
+}
+
+.academic-table-wrap th,
+.academic-table-wrap td,
+.reader-content th,
+.reader-content td {
+  border: 1px solid #94A3B8;
+  padding: 0.45rem 0.6rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.academic-table-wrap th,
+.reader-content th {
+  background: #F1F5F9;
+  font-weight: 700;
+}
+
+.dark .academic-table-wrap th,
+.dark .reader-content th {
+  background: #0F172A;
+  color: #F8FAFC;
+  border-color: #475569;
+}
+
+.dark .academic-table-wrap td,
+.dark .reader-content td {
+  border-color: #475569;
+}
+
+/* Reader HTML Styling */
+.reader-content p {
+  margin-bottom: 0.7rem;
+  line-height: 1.65;
+}
+
+.reader-content ul {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-bottom: 0.7rem;
+}
+
+.reader-content ol {
+  list-style: decimal;
+  padding-left: 1.4rem;
+  margin-bottom: 0.7rem;
+}
+
+/* ==========================================================================
+   A4 Print-Ready Preview Sheet (PRD Section 4 Specification)
+   ========================================================================== */
+.a4-sheet {
+  width: 100%;
+  max-width: 794px; /* ~210mm at 96dpi */
+  margin: 0 auto 1.5rem auto;
+  background: #FFFFFF;
+  color: #000000;
+  padding: 64px 72px; /* ~2.54cm visual margins */
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  border: 1px solid #E2E8F0;
+  font-family: 'Times New Roman', Times, serif;
+  line-height: 1.15;
+}
+
+.a4-cover {
+  text-align: center;
+  min-height: 860px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  padding-bottom: 24px;
+}
+
+.a4-cover-logo {
+  height: 92px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 24pt;
+}
+
+.a4-cover-jenis {
+  font-size: 14pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 28pt;
+}
+
+.a4-cover-judul {
+  font-size: 14pt;
+  font-weight: bold;
+  max-width: 92%;
+  margin: 0 auto;
+}
+
+.a4-cover-tim {
+  font-size: 12pt;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.a4-cover-meta {
+  font-size: 12pt;
+  font-weight: bold;
+  line-height: 1.35;
+}
+
+.a4-bab-title {
+  font-size: 14pt;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 14pt;
+}
+
+.a4-subbab-title {
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 12pt 0 6pt 0;
+}
+
+.a4-body,
+.a4-body p,
+.a4-body li {
+  font-size: 11pt;
+  line-height: 1.15;
+  text-align: justify;
+}
+
+.a4-body p {
+  margin-bottom: 6pt;
+}
+
+.a4-body ul {
+  list-style: disc;
+  padding-left: 18pt;
+  margin-bottom: 6pt;
+}
+
+.a4-body ol {
+  list-style: decimal;
+  padding-left: 18pt;
+  margin-bottom: 6pt;
+}
+
+.a4-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8pt auto 10pt auto;
+}
+
+.a4-body th,
+.a4-body td {
+  border: 1px solid #000000;
+  padding: 4pt 6pt;
+  font-size: 10pt;
+  text-align: center;
+  color: #000000;
+  background: #FFFFFF;
+}
+
+.a4-body th {
+  font-weight: bold;
+  background: #F3F4F6;
+}
+
+.a4-body .table-caption,
+.a4-body figcaption,
+.a4-body .figure-caption {
+  font-size: 10pt;
+  font-weight: bold;
+  text-align: center;
+  color: #000000;
+  margin: 5pt 0;
+}
+
+.a4-body .academic-figure {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #printAreaContainer,
+  #printAreaContainer * {
+    visibility: visible !important;
+  }
+  #printAreaContainer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .a4-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    page-break-after: always;
+  }
+  @page {
+    size: A4;
+    margin: 2.54cm;
+  }
+}

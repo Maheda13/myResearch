@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Anti-Flicker Theme Script (Consistent with HomePage) -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('maheda_portfolio_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <title>myMasterpiece — Pemantau Karya Tulis Santri SMP DAFI</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <!-- Fonts: Quicksand, Inter, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Quicksand:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#FEF2F2',
+              100: '#FEE2E2',
+              500: '#EF4444',
+              600: '#DC2626',
+              700: '#B91C1C',
+              800: '#991B1B',
+              900: '#7F1D1D'
+            }
+          },
+          fontFamily: {
+            heading: ['"Quicksand"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Quill 2 Academic Editor -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body
+  class="bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-800 dark:text-slate-100 antialiased overflow-x-hidden relative selection:bg-red-100 selection:text-red-900 dark:selection:bg-red-900/60 dark:selection:text-red-200 transition-colors duration-300 min-h-screen flex flex-col">
+
+  <!-- Ambient Glow Decorative Blobs -->
+  <div class="ambient-blob-1"></div>
+  <div class="ambient-blob-2"></div>
+  <div class="ambient-blob-3"></div>
+
+  <!-- =========================================================================
+       NAVIGATION BAR
+       ========================================================================= -->
+  <nav
+    class="sticky top-0 z-40 bg-[#F8FAFC]/85 dark:bg-[#0F172A]/85 glass-nav border-b border-slate-200/80 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+
+      <!-- Left: Brand -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="#top" onclick="return false;" class="flex items-center gap-2.5 group">
+          <img id="navSchoolLogo" src="assets/logo-dafi.png" alt="Logo"
+            class="w-9 h-9 rounded-xl object-contain bg-white p-1 border border-slate-200 dark:border-slate-700 shadow-xs">
+          <div class="leading-tight truncate">
+            <span
+              class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white tracking-tight group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              my<span class="text-red-600 dark:text-red-500">Masterpiece</span>
+            </span>
+            <p class="text-[11px] font-medium text-slate-500 dark:text-slate-400 hidden sm:block">
+              Karya Tulis Santri SMP DAFI
+            </p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Right: Quick Tools, User & Theme -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Citation Guide Shortcut -->
+        <button type="button" onclick="openCitationModal()"
+          class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-heading font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-red-300 hover:text-red-600 dark:hover:text-red-400 transition-colors shadow-xs"
+          title="Panduan Sitasi Nama-Tahun">
+          <i data-lucide="book-open" class="w-3.5 h-3.5 text-red-600 dark:text-red-400"></i>
+          <span class="hidden sm:inline">Panduan Sitasi</span>
+        </button>
+
+        <!-- User Badge & Logout (visible when logged in) -->
+        <div id="navUserBox" class="hidden items-center gap-2">
+          <div class="hidden sm:flex flex-col text-right leading-tight pr-1">
+            <span id="navUserName" class="text-xs font-heading font-bold text-slate-900 dark:text-white"></span>
+            <span id="navUserRole"
+              class="text-[10px] font-semibold uppercase tracking-wider text-red-600 dark:text-red-400"></span>
+          </div>
+          <button type="button" onclick="logoutUser()"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-heading font-bold bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60 hover:bg-red-600 hover:text-white transition-colors"
+            title="Keluar Sesi">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Keluar</span>
+          </button>
+        </div>
+
+        <!-- Theme Toggle Button -->
+        <button type="button" onclick="toggleTheme()"
+          class="theme-toggle-btn rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 shadow-xs"
+          title="Beralih Mode Gelap/Terang" aria-label="Toggle Theme">
+          <svg class="w-4 h-4 block dark:hidden fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+          <svg class="w-4 h-4 hidden dark:block fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================================================================
+       MAIN APPLICATION CONTAINER
+       ========================================================================= -->
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+
+    <!-- -----------------------------------------------------------------------
+         VIEW 1: LOGIN & SIGN UP (NO-SCROLL COMPACT AUTH PORTAL)
+         ----------------------------------------------------------------------- -->
+    <section id="viewLogin">
+      <div class="min-h-[calc(100vh-7.75rem)] flex items-center justify-center">
+        <div
+          class="max-w-lg w-full mx-auto bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-black/40">
+
+          <!-- Auth Tabs: Login vs Sign Up -->
+          <div class="p-1 rounded-2xl bg-slate-100 dark:bg-slate-900 grid grid-cols-2 gap-1 mb-4">
+            <button type="button" id="authTabLogin" onclick="switchAuthTab('login')"
+              class="nav-tab-btn py-2 px-3 rounded-xl text-xs font-heading font-bold bg-red-600 text-white shadow-xs">
+              Login
+            </button>
+            <button type="button" id="authTabSignup" onclick="switchAuthTab('signup')"
+              class="nav-tab-btn py-2 px-3 rounded-xl text-xs font-heading font-bold text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800">
+              Sign Up
+            </button>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+            <div>
+              <h2 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Masuk ke Akun</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Masuk menggunakan email dan kata sandi Anda</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Email</label>
+              <input id="loginEmail" type="email" required placeholder="contoh: santri11@smp.belajar.id"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Kata
+                Sandi</label>
+              <input id="loginPassword" type="password" required placeholder="Masukkan kata sandi"
+                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500 transition-all">
+            </div>
+
+            <button type="submit" id="btnLoginSubmit"
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-heading font-bold text-sm shadow-lg shadow-red-600/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+              <i data-lucide="log-in" class="w-4 h-4"></i>
+              <span>Masuk</span>
+            </button>
+          </form>
+
+          <!-- SIGN UP FORM (2-COLUMN COMPACT FOR ZERO SCROLL) -->
+          <form id="signupForm" onsubmit="handleSignupSubmit(event)" class="hidden space-y-2.5">
+            <div>
+              <h2 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Daftar Akun Baru</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Registrasi mandiri untuk Santri dan Guru Pembimbing
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Daftar
+                  Sebagai</label>
+                <select id="signupRole" onchange="onSignupRoleChange()"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500">
+                  <option value="siswa">Santri</option>
+                  <option value="guru">Guru Pembimbing</option>
+                </select>
+              </div>
+              <div>
+                <label id="signupEmailLabel"
+                  class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                <input id="signupEmail" type="email" required placeholder="contoh: santri11@smp.belajar.id"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Nama
+                  Lengkap</label>
+                <input id="signupNama" type="text" required placeholder="Nama lengkap"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+              </div>
+              <div>
+                <label id="signupKelasLabel"
+                  class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Kelas</label>
+                <input id="signupKelas" type="text" placeholder="Contoh: IX-A"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+              </div>
+            </div>
+
+            <div id="signupPembimbingWrap">
+              <label class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Pilih Guru
+                Pembimbing</label>
+              <select id="signupPembimbing"
+                class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+                <option value="">-- Pilih Guru Pembimbing --</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Kata
+                  Sandi</label>
+                <input id="signupPassword" type="password" required minlength="6" placeholder="Min. 6 karakter"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+              </div>
+              <div>
+                <label class="block text-[11px] font-heading font-bold text-slate-700 dark:text-slate-300 mb-1">Ulangi
+                  Sandi</label>
+                <input id="signupPasswordConfirm" type="password" required minlength="6" placeholder="Konfirmasi sandi"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40">
+              </div>
+            </div>
+
+            <button type="submit" id="btnSignupSubmit"
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-heading font-bold text-sm shadow-lg shadow-red-600/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>Daftar &amp; Masuk</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         VIEW 2: SISWA WORKSPACE
+         ----------------------------------------------------------------------- -->
+    <section id="viewSiswa" class="hidden space-y-6">
+
+      <!-- Top Header Banner & Progress -->
+      <div
+        class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1.5 min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="siswaStageBadge"
+                class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-heading font-bold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60">
+                Tahap 1: Proposal Penelitian
+              </span>
+              <span id="siswaBidangBadge"
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700/70 text-slate-700 dark:text-slate-200">
+                Sains dan Lingkungan
+              </span>
+              <span id="siswaJudulStatusBadge"
+                class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold"></span>
+            </div>
+            <h2 id="siswaProjectTitle"
+              class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white leading-snug">
+              Judul Penelitian
+            </h2>
+            <p id="siswaTeamSubtitle" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400"></p>
+          </div>
+
+          <!-- Action Buttons & Progress -->
+          <div class="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-3 shrink-0">
+            <div class="w-full sm:w-56">
+              <div class="flex items-center justify-between text-xs font-heading font-bold mb-1">
+                <span class="text-slate-600 dark:text-slate-300">Progres ACC Tahap Aktif</span>
+                <span id="siswaProgressText" class="text-red-600 dark:text-red-400">0%</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div id="siswaProgressBar"
+                  class="h-full bg-gradient-to-r from-red-600 to-emerald-500 rounded-full transition-all duration-500"
+                  style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- Download buttons hidden in Student UI as requested -->
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="btnDownloadProposalSiswa" onclick="openExportModal('proposal')"
+                class="hidden px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 items-center gap-1.5 transition-colors">
+                <i data-lucide="file-down" class="w-3.5 h-3.5 text-red-600 dark:text-red-400"></i>
+                <span>Download Proposal</span>
+              </button>
+              <button type="button" id="btnDownloadLaporanSiswa" onclick="openExportModal('laporan')"
+                class="hidden px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-emerald-600 hover:bg-emerald-700 text-white items-center gap-1.5 shadow-sm transition-colors">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Download Laporan</span>
+              </button>
+              <button type="button" id="btnAdvanceStage" onclick="promptAdvanceToLaporan()"
+                class="px-3.5 py-2 rounded-xl text-xs font-heading font-bold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white inline-flex items-center gap-1.5 shadow-sm transition-colors">
+                <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5"></i>
+                <span>Lanjut ke Tahap Laporan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-Column Workspace: Section Sidebar + Editor Main -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Sidebar: Stage Switcher & Section List -->
+        <aside class="lg:col-span-4 xl:col-span-3 space-y-4 lg:sticky lg:top-24">
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-xs">
+
+            <!-- Stage View Selector -->
+            <div class="p-1 rounded-2xl bg-slate-100 dark:bg-slate-900 grid grid-cols-2 gap-1 mb-4">
+              <button type="button" id="tabViewProposal" onclick="switchViewingStage('proposal')"
+                class="nav-tab-btn py-2 px-2 rounded-xl text-xs font-heading font-bold transition-all">
+                1. Proposal
+              </button>
+              <button type="button" id="tabViewLaporan" onclick="switchViewingStage('laporan')"
+                class="nav-tab-btn py-2 px-2 rounded-xl text-xs font-heading font-bold transition-all">
+                2. Laporan
+              </button>
+            </div>
+
+            <!-- Cover Metadata Nav Item -->
+            <button type="button" id="navBtnCover" onclick="selectSiswaSection('COVER')"
+              class="w-full mb-3 p-3 rounded-2xl border text-left flex items-center justify-between gap-2 transition-all">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div
+                  class="w-8 h-8 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="layout-template" class="w-4 h-4"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="text-xs font-heading font-bold text-slate-900 dark:text-white truncate">Halaman Sampul
+                  </div>
+                  <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Judul, Tim &amp; Bidang</div>
+                </div>
+              </div>
+              <span id="sidebarCoverStatus"></span>
+            </button>
+
+            <div
+              class="text-[11px] font-heading font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2 mb-2">
+              Struktur Naskah
+            </div>
+
+            <div id="siswaSectionNavList" class="space-y-1.5 max-h-[58vh] overflow-y-auto pr-1"></div>
+          </div>
+        </aside>
+
+        <!-- Main Editor Area -->
+        <div class="lg:col-span-8 xl:col-span-9 space-y-5">
+
+          <!-- PANEL A: COVER METADATA EDITOR -->
+          <div id="panelCoverEditor"
+            class="hidden bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-7 shadow-xs space-y-6">
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/80 dark:border-slate-700">
+              <div>
+                <h3 class="font-heading font-extrabold text-lg sm:text-xl text-slate-900 dark:text-white">
+                  Metadata Halaman Sampul (Cover)
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  Identitas ini otomatis membentuk Halaman Sampul resmi A4 berlogo sekolah saat ekspor PDF/DOCX.
+                </p>
+              </div>
+              <span id="coverStatusBadgeLarge"></span>
+            </div>
+
+            <div class="space-y-4 max-w-3xl">
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Jenis Dokumen (Otomatis Mengikuti Tahap Aktif)
+                </label>
+                <input id="coverJenisDokumen" type="text" readonly
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 text-xs font-heading font-bold text-red-600 dark:text-red-400 cursor-not-allowed">
+              </div>
+
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Judul Penelitian <span class="text-red-500">*</span>
+                </label>
+                <textarea id="coverJudulInput" rows="3"
+                  placeholder="Tuliskan judul penelitian ilmiah secara lengkap dan spesifik..."
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500"></textarea>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-xs font-heading font-bold text-slate-700 dark:text-slate-300">
+                    Nama Tim Peneliti (1 atau beberapa santri) <span class="text-red-500">*</span>
+                  </label>
+                  <button type="button" onclick="addTeamMemberInput()"
+                    class="text-xs font-heading font-bold text-red-600 dark:text-red-400 hover:underline flex items-center gap-1">
+                    <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                    <span>Tambah Anggota</span>
+                  </button>
+                </div>
+                <div id="teamMembersContainer" class="space-y-2"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-heading font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Bidang Penelitian
+                </label>
+                <select id="coverBidangSelect"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40 focus:border-red-500"></select>
+              </div>
+
+              <!-- School Metadata (Managed by Admin) -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                <div>
+                  <label class="block text-[11px] font-heading font-bold text-slate-500 dark:text-slate-400 mb-1">Nama
+                    Sekolah</label>
+                  <input id="coverSekolahDisplay" type="text" readonly
+                    class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+                </div>
+                <div>
+                  <label
+                    class="block text-[11px] font-heading font-bold text-slate-500 dark:text-slate-400 mb-1">Kabupaten
+                    / Provinsi</label>
+                  <input id="coverKabProvDisplay" type="text" readonly
+                    class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+                </div>
+                <div>
+                  <label
+                    class="block text-[11px] font-heading font-bold text-slate-500 dark:text-slate-400 mb-1">Tahun</label>
+                  <input id="coverTahunDisplay" type="text" readonly
+                    class="w-full px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-3 pt-3">
+                <button type="button" onclick="saveCoverMetadata('draf')"
+                  class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 text-white text-xs font-heading font-bold inline-flex items-center gap-2 transition-colors">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Simpan Draf Sampul</span>
+                </button>
+                <button type="button" onclick="saveCoverMetadata('review')"
+                  class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white text-xs font-heading font-bold inline-flex items-center gap-2 shadow-sm transition-colors">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <span>Ajukan Judul ke Pembimbing</span>
+                </button>
+              </div>
+
+              <!-- Title Revision Logs -->
+              <div id="titleLogContainer" class="pt-2"></div>
+            </div>
+          </div>
+
+          <!-- Offline Status Banner -->
+          <div id="offlineAlertBanner"
+            class="hidden p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-200 flex items-center gap-2.5">
+            <i data-lucide="wifi-off" class="w-4 h-4 text-rose-600 shrink-0"></i>
+            <span>Koneksi internet terputus. Perubahan tetap dicadangkan otomatis ke perangkat Anda setiap 5 detik;
+              sambungkan kembali sebelum menekan <strong>Ajukan Review</strong>.</span>
+          </div>
+
+          <!-- PANEL B: SECTION ACADEMIC EDITOR -->
+          <div id="panelSectionEditor" class="hidden space-y-5">
+
+            <!-- Editor Header Card -->
+            <div
+              class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                <div class="space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span id="editorSectionCodeBadge"
+                      class="px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-700 font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300"></span>
+                    <span id="editorSectionStatusBadge"></span>
+                    <span id="editorSectionVersion" class="text-[11px] font-mono text-slate-400">v1</span>
+                  </div>
+                  <h3 id="editorSectionTitle"
+                    class="font-heading font-extrabold text-xl text-slate-900 dark:text-white"></h3>
+                  <p id="editorSectionDesc" class="text-xs text-slate-500 dark:text-slate-400"></p>
+                </div>
+
+                <!-- Auto-save, Focus Mode & Cell Limit Indicator -->
+                <div class="flex flex-col sm:items-end gap-1.5 shrink-0">
+                  <div class="flex items-center gap-2">
+                    <div id="autoSaveBadge"
+                      class="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/60 dark:border-emerald-800/50">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      <span id="autoSaveText">Auto-save lokal aktif (5 dtk)</span>
+                    </div>
+                    <button type="button" id="btnToggleFocusMode" onclick="toggleFocusMode()"
+                      class="px-2.5 py-1 rounded-full text-[11px] font-heading font-bold bg-slate-100 dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-red-950/50 text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 border border-slate-200 dark:border-slate-600 inline-flex items-center gap-1 transition-colors"
+                      title="Mode Fokus Penulisan (Esc untuk keluar)">
+                      <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                      <span id="btnFocusModeLabel">Mode Fokus</span>
+                    </button>
+                  </div>
+                  <div id="charLimitText" class="text-[11px] font-mono text-slate-400">0 / 49.000 karakter</div>
+                </div>
+              </div>
+
+              <!-- Read-only Banner when viewing Proposal while active stage is Laporan -->
+              <div id="readOnlyStageBanner"
+                class="hidden p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-xs text-amber-800 dark:text-amber-200 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+                  <span>Anda sedang meninjau arsip <strong>Tahap 1 (Proposal)</strong>. Untuk menyempurnakan naskah
+                    aktif, beralihlah ke tab <strong>2. Laporan</strong>.</span>
+                </div>
+                <button type="button" onclick="switchViewingStage('laporan')"
+                  class="px-3 py-1 rounded-lg bg-amber-600 text-white font-heading font-bold shrink-0">Buka
+                  Laporan</button>
+              </div>
+
+              <!-- Local Backup Recovery Banner -->
+              <div id="localRecoveryBanner"
+                class="hidden p-3.5 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800/60 text-xs text-sky-800 dark:text-sky-200 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="history" class="w-4 h-4 shrink-0"></i>
+                  <span>Ditemukan cadangan lokal yang lebih baru di perangkat ini (<span
+                      id="recoveryTimeText"></span>).</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="restoreLocalBackup()"
+                    class="px-3 py-1 rounded-lg bg-sky-600 text-white font-heading font-bold">Pulihkan</button>
+                  <button type="button" onclick="dismissLocalBackup()"
+                    class="px-2.5 py-1 rounded-lg bg-white/70 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">Abaikan</button>
+                </div>
+              </div>
+
+              <!-- SPECIAL: ABSTRAK WORD COUNTER & KEYWORDS -->
+              <div id="specialAbstrakBox"
+                class="hidden p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-xs font-heading font-bold text-slate-700 dark:text-slate-200">Validasi
+                    Abstrak</span>
+                  <span id="abstrakWordBadge"
+                    class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    0 / 250 kata
+                  </span>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label class="text-xs font-heading font-bold text-slate-700 dark:text-slate-300">
+                      Kata Kunci (Wajib 3–5 kata/frasa, pisahkan dengan koma)
+                    </label>
+                    <span id="abstrakKeywordBadge" class="text-[11px] font-mono text-slate-500">0 kata kunci</span>
+                  </div>
+                  <input id="abstrakKeywordsInput" type="text" oninput="validateAbstrakMetrics()"
+                    placeholder="Contoh: biochar, sekam padi, timbal, adsorpsi, limbah cair"
+                    class="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500/40">
+                </div>
+              </div>
+
+              <!-- SPECIAL: DAFTAR PUSTAKA CITATION HELPER & WIKIPEDIA/BLOG WARNING -->
+              <div id="specialPustakaBox" class="hidden space-y-3">
+                <div id="pustakaWarningAlert"
+                  class="hidden p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-800 text-xs text-rose-800 dark:text-rose-200 flex items-start gap-2.5">
+                  <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600 shrink-0 mt-0.5"></i>
+                  <div>
+                    <strong class="font-heading">Peringatan Kredibilitas Sumber!</strong>
+                    <p id="pustakaWarningDetail" class="mt-0.5"></p>
+                  </div>
+                </div>
+                <div
+                  class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div class="text-slate-600 dark:text-slate-300">
+                    <strong class="font-heading text-slate-800 dark:text-white">Sistem Sitasi Nama–Tahun:</strong>
+                    Gunakan sumber primer (jurnal, buku teks, prosiding resmi), misal: <span
+                      class="font-mono text-red-600 dark:text-red-400">Saharjo &amp; Nurhayati (2006)</span> atau <span
+                      class="font-mono text-red-600 dark:text-red-400">Balagadde dkk. (2008)</span>.
+                  </div>
+                  <button type="button" onclick="openCitationModal()"
+                    class="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-heading font-bold text-red-600 dark:text-red-400 hover:border-red-300">
+                    Lihat Contoh Lengkap
+                  </button>
+                </div>
+              </div>
+
+              <!-- SPECIAL: BAB 2 SUB-CHAPTER MANAGER & GURU SUGGESTIONS -->
+              <div id="specialBab2Box"
+                class="hidden space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h4 class="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Pengatur Sub-bab BAB
+                      2 (Tinjauan Pustaka)</h4>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Tentukan jumlah dan judul sub-bab Bab 2
+                      Anda, atau terapkan saran dari Guru Pembimbing.</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label class="text-[11px] font-heading font-bold text-slate-600 dark:text-slate-300">Jumlah
+                      Sub-bab:</label>
+                    <input id="bab2CountInput" type="number" min="1" max="10" value="3"
+                      onchange="setBab2SubchapterCount(this.value)"
+                      class="w-16 px-2.5 py-1 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-center">
+                    <button type="button" onclick="saveBab2Structure()"
+                      class="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold">Simpan
+                      Struktur</button>
+                  </div>
+                </div>
+
+                <!-- Mentor Suggestions for Bab 2 -->
+                <div id="bab2GuruSuggestBanner"
+                  class="hidden p-3.5 rounded-xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 space-y-2">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span
+                      class="text-xs font-heading font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                      <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                      <span>Saran Daftar Sub-bab Bab 2 dari Guru Pembimbing</span>
+                    </span>
+                    <button type="button" onclick="applyGuruBab2Suggestions()"
+                      class="px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-heading font-bold">Terapkan
+                      Saran ke Bab 2</button>
+                  </div>
+                  <ul id="bab2GuruSuggestList"
+                    class="list-disc pl-4 text-xs text-amber-900 dark:text-amber-200 space-y-0.5"></ul>
+                </div>
+
+                <!-- Editable Bab 2 Subchapters List -->
+                <div id="bab2SubchaptersEditorList" class="space-y-2"></div>
+              </div>
+
+              <!-- SPECIAL: BAB 3 STRUCTURED BUILDERS (RAB, JADWAL, ETHICAL CLEARANCE) -->
+              <div id="specialBab3Box"
+                class="hidden space-y-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h4 class="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Komponen Terstruktur
+                      Metodologi (Bab 3)</h4>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Isi RAB, Jadwal Penelitian, dan Ethical
+                      Clearance di bawah; sistem otomatis menyertakannya saat ekspor naskah.</p>
+                  </div>
+                  <button type="button" onclick="syncStructuredBab3ToEditor()"
+                    class="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                    <span>Pratinjau &amp; Validasi Tabel Bab 3</span>
+                  </button>
+                </div>
+                <div id="bab3CompiledPreview"
+                  class="hidden p-3.5 rounded-xl bg-white dark:bg-slate-800 border border-red-200 dark:border-red-800/60 reader-content text-xs space-y-2">
+                </div>
+
+                <!-- 1. RAB Builder -->
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-heading font-bold text-slate-800 dark:text-slate-100">A. Rencana Anggaran
+                      Biaya (RAB)</span>
+                    <button type="button" onclick="addRabRow()"
+                      class="text-xs font-heading font-bold text-red-600 dark:text-red-400 hover:underline">+ Tambah
+                      Item</button>
+                  </div>
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-xs border-collapse">
+                      <thead>
+                        <tr class="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
+                          <th class="p-2 text-left border border-slate-200 dark:border-slate-700">Uraian Kebutuhan</th>
+                          <th class="p-2 w-16 border border-slate-200 dark:border-slate-700">Vol</th>
+                          <th class="p-2 w-24 border border-slate-200 dark:border-slate-700">Satuan</th>
+                          <th class="p-2 w-32 border border-slate-200 dark:border-slate-700">Harga (Rp)</th>
+                          <th class="p-2 w-32 border border-slate-200 dark:border-slate-700">Subtotal</th>
+                          <th class="p-2 w-10 border border-slate-200 dark:border-slate-700"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="rabTableBody"></tbody>
+                      <tfoot>
+                        <tr class="font-bold bg-slate-50 dark:bg-slate-900/60">
+                          <td colspan="4" class="p-2 text-right border border-slate-200 dark:border-slate-700">Total
+                            Rencana Anggaran</td>
+                          <td id="rabTotalCell"
+                            class="p-2 text-right font-mono text-red-600 dark:text-red-400 border border-slate-200 dark:border-slate-700">
+                            Rp 0</td>
+                          <td class="border border-slate-200 dark:border-slate-700"></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 2. Jadwal Penelitian Builder -->
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-heading font-bold text-slate-800 dark:text-slate-100">B. Jadwal
+                      Pelaksanaan Penelitian (Bulan 1–6)</span>
+                    <button type="button" onclick="addJadwalRow()"
+                      class="text-xs font-heading font-bold text-red-600 dark:text-red-400 hover:underline">+ Tambah
+                      Kegiatan</button>
+                  </div>
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-xs border-collapse">
+                      <thead>
+                        <tr class="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
+                          <th class="p-2 text-left border border-slate-200 dark:border-slate-700">Kegiatan Penelitian
+                          </th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B1</th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B2</th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B3</th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B4</th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B5</th>
+                          <th class="p-2 w-12 text-center border border-slate-200 dark:border-slate-700">B6</th>
+                          <th class="p-2 w-10 border border-slate-200 dark:border-slate-700"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="jadwalTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 3. Ethical Clearance -->
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700 space-y-2.5">
+                  <span class="block text-xs font-heading font-bold text-slate-800 dark:text-slate-100">C. Keterangan
+                    Ethical Clearance</span>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <label
+                      class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                      <input type="checkbox" id="ethManusia" onchange="onStructuredInputChange()"
+                        class="rounded text-red-600 focus:ring-red-500">
+                      <span>Melibatkan Subjek Manusia / Responden</span>
+                    </label>
+                    <label
+                      class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                      <input type="checkbox" id="ethHewan" onchange="onStructuredInputChange()"
+                        class="rounded text-red-600 focus:ring-red-500">
+                      <span>Melibatkan Hewan Uji</span>
+                    </label>
+                    <label
+                      class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                      <input type="checkbox" id="ethMikro" onchange="onStructuredInputChange()"
+                        class="rounded text-red-600 focus:ring-red-500">
+                      <span>Melibatkan Mikroorganisme</span>
+                    </label>
+                    <label
+                      class="flex items-center gap-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                      <input type="checkbox" id="ethKimia" onchange="onStructuredInputChange()"
+                        class="rounded text-red-600 focus:ring-red-500">
+                      <span>Melibatkan Bahan Kimia Berbahaya</span>
+                    </label>
+                  </div>
+                  <textarea id="ethCatatan" rows="2" oninput="onStructuredInputChange()"
+                    placeholder="Jelaskan protokol keselamatan/izin etik (atau tulis 'Tidak melibatkan objek berisiko etik' jika tidak ada)..."
+                    class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500/40"></textarea>
+                </div>
+              </div>
+
+              <!-- SPECIAL: LAMPIRAN REALISASI RAB BUILDER -->
+              <div id="specialLampiranBox"
+                class="hidden space-y-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h4 class="font-heading font-extrabold text-sm text-slate-900 dark:text-white">Realisasi Anggaran
+                      Biaya (Lampiran)</h4>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Catat realisasi pengeluaran riil
+                      dibandingkan rencana anggaran di Bab 3.</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="addRealisasiRow()"
+                      class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-heading font-bold text-red-600 dark:text-red-400">+
+                      Tambah Baris</button>
+                    <button type="button" onclick="syncRealisasiToEditor()"
+                      class="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold">Sisipkan
+                      ke Lampiran</button>
+                  </div>
+                </div>
+                <div
+                  class="bg-white dark:bg-slate-800 rounded-xl p-3 border border-slate-200 dark:border-slate-700 overflow-x-auto">
+                  <table class="w-full text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
+                        <th class="p-2 text-left border border-slate-200 dark:border-slate-700">Uraian Pengeluaran</th>
+                        <th class="p-2 w-28 border border-slate-200 dark:border-slate-700">Rencana (Rp)</th>
+                        <th class="p-2 w-28 border border-slate-200 dark:border-slate-700">Realisasi (Rp)</th>
+                        <th class="p-2 w-28 border border-slate-200 dark:border-slate-700">Keterangan</th>
+                        <th class="p-2 w-8 border border-slate-200 dark:border-slate-700"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="realisasiTableBody"></tbody>
+                    <tfoot>
+                      <tr class="font-bold bg-slate-50 dark:bg-slate-900/60">
+                        <td class="p-2 text-right border border-slate-200 dark:border-slate-700">Total</td>
+                        <td id="realisasiRencanaTotal"
+                          class="p-2 text-right font-mono border border-slate-200 dark:border-slate-700">Rp 0</td>
+                        <td id="realisasiAktualTotal"
+                          class="p-2 text-right font-mono text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-slate-700">
+                          Rp 0</td>
+                        <td colspan="2" class="border border-slate-200 dark:border-slate-700"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Academic Helper Toolbar Row -->
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" onclick="openImageUploadModal()"
+                    class="px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/50 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60 text-xs font-heading font-bold inline-flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
+                    <span>Sisip Gambar (Drive)</span>
+                  </button>
+                  <button type="button" onclick="openTableBuilderModal()"
+                    class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 text-xs font-heading font-bold inline-flex items-center gap-1.5 transition-colors">
+                    <i data-lucide="table" class="w-3.5 h-3.5 text-red-600 dark:text-red-400"></i>
+                    <span>Sisip Tabel Terstruktur</span>
+                  </button>
+                </div>
+                <span class="text-[11px] text-slate-400 italic">
+                  Tip: Gunakan <em>Italic</em> untuk nama ilmiah spesies (mis. <em>Oryza sativa</em>)
+                </span>
+              </div>
+
+              <!-- Quill Editor Mount -->
+              <div class="academic-editor-shell">
+                <div id="quillEditorContainer"></div>
+              </div>
+
+              <!-- Student Note & Action Buttons -->
+              <div class="pt-2 space-y-3">
+                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                  <input id="studentSubmitNote" type="text"
+                    placeholder="Catatan opsional untuk pembimbing saat mengajukan review (mis. 'Sudah memperbaiki sitasi Bab 2')..."
+                    class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500/40">
+                  <div class="flex flex-wrap items-center gap-2 shrink-0">
+                    <button type="button" id="btnSaveDraft" onclick="saveCurrentSection('draf')"
+                      class="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5 transition-colors"
+                      title="Simpan Draf (Ctrl + S)">
+                      <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                      <span>Simpan Draf</span>
+                    </button>
+                    <button type="button" id="btnSubmitReview" onclick="saveCurrentSection('review')"
+                      class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5 shadow-sm transition-colors">
+                      <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                      <span>Ajukan Review Pembimbing</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Revision Log Timeline Card -->
+            <div
+              class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs">
+              <div class="flex items-center justify-between mb-4">
+                <h4
+                  class="font-heading font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
+                  <i data-lucide="message-square-text" class="w-4 h-4 text-red-600 dark:text-red-400"></i>
+                  <span>Log Bimbingan &amp; Catatan Revisi Bagian Ini</span>
+                </h4>
+                <span id="sectionLogCount" class="text-xs font-mono text-slate-400">0 catatan</span>
+              </div>
+              <div id="sectionRevisionLogs" class="space-y-2.5"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         VIEW 3: GURU PEMBIMBING WORKSPACE (2 HALAMAN: DASHBOARD & REVIEW)
+         ----------------------------------------------------------------------- -->
+    <section id="viewGuru" class="hidden space-y-6">
+
+      <!-- Guru 2-Page Top Switcher -->
+      <div
+        class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 sm:p-5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-900 gap-1">
+          <button type="button" id="guruNavDashboard" onclick="switchGuruPage('dashboard')"
+            class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-heading font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+            <span>Dashboard</span>
+          </button>
+          <button type="button" id="guruNavReview" onclick="switchGuruPage('review')"
+            class="nav-tab-btn px-4 py-2 rounded-xl text-xs font-heading font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="file-check-2" class="w-3.5 h-3.5"></i>
+            <span>Review Karya Tulis</span>
+          </button>
+        </div>
+
+        <button type="button" onclick="refreshWorkspaceFromBackend()"
+          class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-xs font-heading font-bold inline-flex items-center gap-1.5 text-slate-700 dark:text-slate-200">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          <span>Muat Ulang Data</span>
+        </button>
+      </div>
+
+      <!-- HALAMAN 1: GURU DASHBOARD (Kartu Ringkasan & List Judul + Detail) -->
+      <div id="guruPageDashboard" class="space-y-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-2xl p-4 shadow-xs">
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Tim Bimbingan</div>
+            <div id="guruStatTeams" class="font-heading font-extrabold text-2xl text-slate-900 dark:text-white mt-1">0
+            </div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-2xl p-4 shadow-xs">
+            <div class="text-xs text-amber-600 dark:text-amber-400 font-medium">Menunggu Review</div>
+            <div id="guruStatPending"
+              class="font-heading font-extrabold text-2xl text-amber-600 dark:text-amber-400 mt-1">0</div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-2xl p-4 shadow-xs">
+            <div class="text-xs text-rose-600 dark:text-rose-400 font-medium">Sedang Revisi</div>
+            <div id="guruStatRevisi" class="font-heading font-extrabold text-2xl text-rose-600 dark:text-rose-400 mt-1">
+              0</div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-2xl p-4 shadow-xs">
+            <div class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Bagian ACC</div>
+            <div id="guruStatAcc"
+              class="font-heading font-extrabold text-2xl text-emerald-600 dark:text-emerald-400 mt-1">0</div>
+          </div>
+        </div>
+
+        <!-- List Judul & Detail -->
+        <div
+          class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Daftar Karya Tulis Santri
+                Bimbingan</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Klik <strong>Review Naskah</strong> pada karya tulis
+                untuk meninjau bagian demi bagian.</p>
+            </div>
+            <input id="guruSearchInput" type="text" oninput="renderGuruTeamList()"
+              placeholder="Cari judul, tim, atau bidang..."
+              class="w-full sm:w-72 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs focus:outline-none focus:ring-2 focus:ring-red-500/40">
+          </div>
+          <div id="guruTeamList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+      </div>
+
+      <!-- HALAMAN 2: GURU REVIEW (Judul di Atas, Bagian Vertikal Kiri, Tulisan & Revisi/ACC Kanan) -->
+      <div id="guruPageReview" class="hidden space-y-5">
+
+        <div id="guruEmptyState"
+          class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-10 text-center text-slate-500 dark:text-slate-400 space-y-3">
+          <p class="text-sm">Belum ada karya tulis yang dipilih untuk direview.</p>
+          <button type="button" onclick="switchGuruPage('dashboard')"
+            class="px-4 py-2 rounded-xl bg-red-600 text-white text-xs font-heading font-bold">Pilih dari
+            Dashboard</button>
+        </div>
+
+        <div id="guruReviewWorkspace" class="hidden space-y-5">
+
+          <!-- TOP: JUDUL KARYA TULIS + REVIEW JUDUL -->
+          <div
+            class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+              <div class="space-y-1.5 min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <button type="button" onclick="switchGuruPage('dashboard')"
+                    class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-[11px] font-heading font-bold inline-flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                    <span>Dashboard</span>
+                  </button>
+                  <span id="guruActiveStageBadge"
+                    class="px-3 py-1 rounded-full text-xs font-heading font-bold bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200/80 dark:border-red-800/60"></span>
+                  <span id="guruJudulStatusBadge"></span>
+                </div>
+                <h2 id="guruSelectedJudul"
+                  class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white leading-snug">
+                </h2>
+                <p id="guruSelectedMeta" class="text-xs text-slate-500 dark:text-slate-400"></p>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <button type="button" onclick="openExportModal('proposal', state.guruSelectedKtiId)"
+                  class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-heading font-bold inline-flex items-center gap-1.5">
+                  <i data-lucide="file-down" class="w-3.5 h-3.5 text-red-600"></i>
+                  <span>Ekspor Proposal</span>
+                </button>
+                <button type="button" id="btnGuruDownloadLaporan"
+                  onclick="openExportModal('laporan', state.guruSelectedKtiId)"
+                  class="hidden px-3 py-2 rounded-xl bg-emerald-600 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+                  <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                  <span>Ekspor Laporan</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Title Review Input (Hidden automatically when status_judul === 'acc') -->
+            <div id="guruTitleDecisionForm"
+              class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <input id="guruTitleNote" type="text" placeholder="Catatan review judul penelitian..."
+                class="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" onclick="submitGuruTitleReview('revisi')"
+                  class="px-3 py-2 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-heading font-bold hover:bg-rose-200">Revisi
+                  Judul</button>
+                <button type="button" onclick="submitGuruTitleReview('acc')"
+                  class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-heading font-bold">ACC
+                  Judul</button>
+              </div>
+            </div>
+
+            <!-- Last Title Note (Shown when status_judul === 'acc') -->
+            <div id="guruTitleLastNoteBox"
+              class="hidden p-3.5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-xs text-emerald-900 dark:text-emerald-200">
+            </div>
+          </div>
+
+          <!-- 2-COLUMN REVIEW BODY: LEFT VERTICAL SECTIONS + RIGHT READER & REVISION/ACC -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LEFT SIDEBAR: VERTICAL SECTION BUTTONS -->
+            <aside
+              class="lg:col-span-4 xl:col-span-3 bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-4 shadow-xs space-y-3 lg:sticky lg:top-24">
+              <div class="p-1 rounded-2xl bg-slate-100 dark:bg-slate-900 grid grid-cols-2 gap-1">
+                <button type="button" id="guruStageTabProposal" onclick="switchGuruStage('proposal')"
+                  class="py-2 px-2 rounded-xl text-xs font-heading font-bold">1. Proposal</button>
+                <button type="button" id="guruStageTabLaporan" onclick="switchGuruStage('laporan')"
+                  class="py-2 px-2 rounded-xl text-xs font-heading font-bold">2. Laporan</button>
+              </div>
+
+              <select id="guruStatusFilter" onchange="renderGuruSectionTabs()"
+                class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-semibold">
+                <option value="all">Semua Bagian</option>
+                <option value="review">Menunggu Review</option>
+                <option value="revisi">Perlu Revisi</option>
+                <option value="acc">Sudah ACC</option>
+                <option value="draf">Masih Draf</option>
+              </select>
+
+              <div class="text-[11px] font-heading font-bold uppercase tracking-wider text-slate-400 px-1">
+                Bagian Karya Tulis
+              </div>
+              <div id="guruSectionTabs" class="flex flex-col space-y-1.5 max-h-[46vh] overflow-y-auto pr-1"></div>
+
+              <!-- GURU: SARAN SUB-BAB BAB 2 -->
+              <div id="guruBab2SuggestBox" class="pt-3 border-t border-slate-200 dark:border-slate-700 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span
+                    class="text-[11px] font-heading font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                    Saran Sub-bab Bab 2
+                  </span>
+                  <button type="button" onclick="addGuruBab2SuggestRow()"
+                    class="text-[11px] font-heading font-bold text-red-600 dark:text-red-400 hover:underline">+
+                    Tambah</button>
+                </div>
+                <div id="guruBab2SuggestInputs" class="space-y-1.5 max-h-44 overflow-y-auto pr-0.5"></div>
+                <button type="button" onclick="saveGuruBab2Suggestions()"
+                  class="w-full py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-heading font-bold transition-colors">
+                  Kirim Saran Sub-bab Bab 2
+                </button>
+              </div>
+            </aside>
+
+            <!-- RIGHT CONTENT: STUDENT WRITING + REVISION INPUT / ACC -->
+            <div
+              class="lg:col-span-8 xl:col-span-9 bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5">
+              <div
+                class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-700">
+                <div>
+                  <h3 id="guruReviewSecTitle"
+                    class="font-heading font-extrabold text-lg text-slate-900 dark:text-white"></h3>
+                  <div id="guruReviewSecMeta" class="text-xs text-slate-500 dark:text-slate-400"></div>
+                </div>
+                <span id="guruReviewSecBadge"></span>
+              </div>
+
+              <!-- Validation Insights -->
+              <div id="guruReviewInsights"
+                class="hidden p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
+              </div>
+
+              <!-- Student Writing HTML Reader -->
+              <div id="guruReviewHtmlBody"
+                class="reader-content p-4 sm:p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 min-h-[220px] text-sm text-slate-800 dark:text-slate-200">
+              </div>
+
+              <!-- Revision Input & Revisi/ACC Buttons (Hidden automatically when section status === 'acc') -->
+              <div id="guruSectionDecisionForm"
+                class="p-4 rounded-2xl bg-red-50/40 dark:bg-slate-900 border border-red-100 dark:border-slate-700 space-y-3">
+                <label class="block text-xs font-heading font-bold text-slate-800 dark:text-slate-200">
+                  Catatan Revisi Pembimbing
+                </label>
+                <textarea id="guruReviewNoteInput" rows="3"
+                  placeholder="Tuliskan masukan substansi, metodologi, tata tulis nama ilmiah, atau kelengkapan pustaka..."
+                  class="w-full px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/40"></textarea>
+                <div class="flex flex-wrap items-center justify-end gap-2.5">
+                  <button type="button" onclick="submitGuruSectionReview('revisi')"
+                    class="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Perlu Revisi</span>
+                  </button>
+                  <button type="button" onclick="submitGuruSectionReview('acc')"
+                    class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5 shadow-sm">
+                    <i data-lucide="check-check" class="w-3.5 h-3.5"></i>
+                    <span>ACC Bagian Ini</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Last Revision Note Only (Shown when section status === 'acc') -->
+              <div id="guruLastRevisionNoteBox"
+                class="hidden p-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 space-y-1.5">
+                <div
+                  class="text-xs font-heading font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                  <span>Bagian Sudah ACC — Catatan Revisi Terakhir</span>
+                </div>
+                <div id="guruLastRevisionNoteContent" class="text-xs text-slate-700 dark:text-slate-200"></div>
+              </div>
+
+              <!-- Revision History (Shown when section status !== 'acc') -->
+              <div id="guruSectionLogsWrap">
+                <h4
+                  class="font-heading font-bold text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">
+                  Riwayat Revisi Bagian</h4>
+                <div id="guruSectionLogs" class="space-y-2"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         VIEW 4: ADMIN WORKSPACE
+         ----------------------------------------------------------------------- -->
+    <section id="viewAdmin" class="hidden space-y-6">
+      <div
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs">
+        <div>
+          <h2 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 dark:text-white">Panel Admin KTI
+            Sekolah</h2>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Kelola konfigurasi sampul sekolah, akun
+            pengguna, pemetaan pembimbing, dan pemantauan seluruh KTI.</p>
+        </div>
+        <div class="flex flex-wrap p-1 rounded-2xl bg-slate-100 dark:bg-slate-900 gap-1">
+          <button type="button" onclick="switchAdminTab('monitoring')" id="adminTabMonitoring"
+            class="px-3.5 py-2 rounded-xl text-xs font-heading font-bold">Monitoring KTI</button>
+          <button type="button" onclick="switchAdminTab('config')" id="adminTabConfig"
+            class="px-3.5 py-2 rounded-xl text-xs font-heading font-bold">Konfigurasi Sekolah</button>
+          <button type="button" onclick="switchAdminTab('users')" id="adminTabUsers"
+            class="px-3.5 py-2 rounded-xl text-xs font-heading font-bold">Pengguna &amp; Pembimbing</button>
+        </div>
+      </div>
+
+      <!-- Admin Tab 1: Monitoring KTI -->
+      <div id="adminPanelMonitoring"
+        class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Rekap Seluruh Karya Tulis
+            Santri</h3>
+          <input id="adminKtiSearch" type="text" oninput="renderAdminMonitoring()" placeholder="Cari judul / tim..."
+            class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs w-64">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+                <th class="py-3 px-3">Tim Peneliti</th>
+                <th class="py-3 px-3">Judul Penelitian</th>
+                <th class="py-3 px-3">Bidang</th>
+                <th class="py-3 px-3">Tahap</th>
+                <th class="py-3 px-3">Progres ACC</th>
+                <th class="py-3 px-3 text-right">Ekspor</th>
+              </tr>
+            </thead>
+            <tbody id="adminKtiTableBody" class="divide-y divide-slate-100 dark:divide-slate-700/70"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Admin Tab 2: Config -->
+      <div id="adminPanelConfig"
+        class="hidden bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-5">
+        <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Konfigurasi Halaman Sampul
+          &amp; Google Drive</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-heading font-bold mb-1.5">Nama Sekolah</label>
+            <input id="cfgNamaSekolah" type="text"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-heading font-bold mb-1.5">Kabupaten / Provinsi</label>
+            <input id="cfgKabProv" type="text"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-heading font-bold mb-1.5">Tahun Kompetisi</label>
+            <input id="cfgTahun" type="text"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm">
+          </div>
+          <div>
+            <label class="block text-xs font-heading font-bold mb-1.5">ID Folder Google Drive (Opsional)</label>
+            <input id="cfgDriveFolder" type="text" placeholder="Kosongkan untuk buat otomatis"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-heading font-bold mb-1.5">Logo Sekolah (URL / Aset Statis atau Unggah ke
+              Drive)</label>
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <img id="cfgLogoPreview" src="assets/logo-dafi.png" alt="Logo Preview"
+                class="w-12 h-12 rounded-xl object-contain bg-white border border-slate-200 p-1 shrink-0">
+              <input id="cfgLogoUrl" type="text"
+                oninput="document.getElementById('cfgLogoPreview').src=this.value||'assets/logo-dafi.png'"
+                class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm font-mono">
+              <label
+                class="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-red-50 dark:hover:bg-red-950/50 text-slate-700 dark:text-slate-200 hover:text-red-600 border border-slate-200 dark:border-slate-600 text-xs font-heading font-bold inline-flex items-center justify-center gap-1.5 cursor-pointer shrink-0 transition-colors">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>Unggah Logo</span>
+                <input id="cfgLogoFileInput" type="file" accept="image/*" onchange="uploadAdminLogo(event)"
+                  class="hidden">
+              </label>
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-xs font-heading font-bold mb-1.5">Daftar Bidang Kompetisi (pisahkan dengan tanda |
+              )</label>
+            <input id="cfgBidangList" type="text"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm">
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <button type="button" onclick="saveAdminConfig()"
+            class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white text-xs font-heading font-bold inline-flex items-center gap-2">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Simpan Konfigurasi</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Tab 3: Users -->
+      <div id="adminPanelUsers" class="hidden space-y-5">
+        <div
+          class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
+          <h3 class="font-heading font-extrabold text-base text-slate-900 dark:text-white">Tambah / Perbarui Pengguna
+          </h3>
+          <input type="hidden" id="usrEditId">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <input id="usrEmail" type="email" placeholder="Email (mis. santri11@smp.belajar.id)"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+            <input id="usrNama" type="text" placeholder="Nama Lengkap"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+            <input id="usrPassword" type="password" placeholder="Kata Sandi (kosongkan jika edit)"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+            <select id="usrRole"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+              <option value="siswa">Santri</option>
+              <option value="guru">Guru Pembimbing</option>
+              <option value="admin">Admin</option>
+            </select>
+            <input id="usrKelas" type="text" placeholder="Kelas / Bidang Guru"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+            <select id="usrPembimbing"
+              class="px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+              <option value="">-- Pilih Pembimbing (untuk Santri) --</option>
+            </select>
+          </div>
+          <div class="flex justify-end gap-2">
+            <button type="button" onclick="clearAdminUserForm()"
+              class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-heading font-bold">Reset
+              Form</button>
+            <button type="button" onclick="saveAdminUser()"
+              class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold">Simpan
+              Pengguna</button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white dark:bg-slate-800/95 border border-slate-200/90 dark:border-slate-700 rounded-3xl p-5 sm:p-6 shadow-xs overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-500">
+                <th class="py-2.5 px-3">Email</th>
+                <th class="py-2.5 px-3">Nama Lengkap</th>
+                <th class="py-2.5 px-3">Role</th>
+                <th class="py-2.5 px-3">Kelas</th>
+                <th class="py-2.5 px-3">Pembimbing</th>
+                <th class="py-2.5 px-3 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="adminUsersTableBody" class="divide-y divide-slate-100 dark:divide-slate-700/70"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer
+    class="relative z-10 border-t border-slate-200/80 dark:border-slate-800 py-3 text-center text-xs text-slate-500 dark:text-slate-400">
+    <span>&copy; 2026 <strong class="text-slate-700 dark:text-slate-200">mahedaLab</strong> • Sistem Pemantau Karya
+      Tulis Santri SMP DAFI</span>
+  </footer>
+
+  <!-- =========================================================================
+       MODALS
+       ========================================================================= -->
+
+  <!-- MODAL 1: SISIP GAMBAR (GOOGLE DRIVE) -->
+  <div id="modalImage"
+    class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      class="modal-enter bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Sisip Gambar Ilmiah</h3>
+        <button type="button" onclick="closeModal('modalImage')"
+          class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"><i data-lucide="x"
+            class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-heading font-bold mb-1">Pilih File Gambar (JPG/PNG/WebP)</label>
+          <input id="imgFileInput" type="file" accept="image/*" onchange="previewSelectedImage(event)"
+            class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-red-50 file:text-red-700 file:font-bold hover:file:bg-red-100">
+        </div>
+        <div id="imgPreviewWrap"
+          class="hidden p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-center">
+          <img id="imgPreviewEl" src="" alt="Preview" class="max-h-44 mx-auto rounded-lg">
+        </div>
+        <div>
+          <label class="block text-xs font-heading font-bold mb-1">Judul Gambar (Wajib — format: Gambar X: ...)</label>
+          <input id="imgCaptionInput" type="text" placeholder="Contoh: Gambar 1: Morfologi permukaan biochar sekam padi"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modalImage')"
+          class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-heading font-bold">Batal</button>
+        <button type="button" id="btnConfirmInsertImg" onclick="confirmInsertImage()"
+          class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold">Unggah
+          &amp; Sisipkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: SISIP TABEL TERSTRUKTUR -->
+  <div id="modalTable"
+    class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      class="modal-enter bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between">
+        <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Pembuat Tabel Akademis</h3>
+        <button type="button" onclick="closeModal('modalTable')"
+          class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"><i data-lucide="x"
+            class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-3 overflow-y-auto pr-1">
+        <div>
+          <label class="block text-xs font-heading font-bold mb-1">Judul Tabel (Wajib di atas tabel — format: Tabel X:
+            ...)</label>
+          <input id="tblCaptionInput" type="text"
+            placeholder="Contoh: Tabel 1: Efisiensi adsorpsi ion timbal pada variasi waktu kontak"
+            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-bold">Baris:</label>
+            <input id="tblRowsInput" type="number" min="2" max="15" value="4" onchange="rebuildModalTableGrid()"
+              class="w-16 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-bold">Kolom:</label>
+            <input id="tblColsInput" type="number" min="2" max="8" value="3" onchange="rebuildModalTableGrid()"
+              class="w-16 px-2.5 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs">
+          </div>
+          <span class="text-[11px] text-slate-400">Baris pertama otomatis menjadi Header Tabel.</span>
+        </div>
+        <div id="modalTableGridWrap"
+          class="overflow-x-auto border border-slate-200 dark:border-slate-700 rounded-xl p-2"></div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modalTable')"
+          class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-heading font-bold">Batal</button>
+        <button type="button" onclick="confirmInsertTable()"
+          class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold">Sisipkan
+          Tabel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PRATINJAU & EKSPOR DOKUMEN UTUH A4 (PDF / DOCX) -->
+  <div id="modalExport"
+    class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4">
+    <div
+      class="modal-enter bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl max-w-5xl w-full h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div
+        class="px-5 py-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 id="exportModalTitle"
+            class="font-heading font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">Pratinjau Dokumen
+            Utuh A4</h3>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Kertas A4 • Margin 2,54 cm • Times New Roman • Spasi
+            1,15 • Otomatis Page Break per Bab</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" onclick="executeDocumentExport('pdf')"
+            class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+            <span>Unduh PDF</span>
+          </button>
+          <button type="button" onclick="executeDocumentExport('docx')"
+            class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="file-type" class="w-3.5 h-3.5"></i>
+            <span>Unduh DOCX</span>
+          </button>
+          <button type="button" onclick="window.print()"
+            class="px-3.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white text-xs font-heading font-bold inline-flex items-center gap-1.5">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Cetak Browser</span>
+          </button>
+          <button type="button" onclick="closeModal('modalExport')"
+            class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"><i data-lucide="x"
+              class="w-4 h-4"></i></button>
+        </div>
+      </div>
+      <div id="printAreaContainer" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6"></div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: PANDUAN SITASI NAMA-TAHUN -->
+  <div id="modalCitation"
+    class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      class="modal-enter bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <h3 class="font-heading font-extrabold text-lg text-slate-900 dark:text-white">Panduan Sitasi Sistem Nama–Tahun
+        </h3>
+        <button type="button" onclick="closeModal('modalCitation')"
+          class="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700"><i data-lucide="x"
+            class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+          <div class="font-heading font-bold text-slate-900 dark:text-white mb-1">1. Sitasi di Dalam Naskah (In-Text
+            Citation)</div>
+          <ul class="list-disc pl-4 space-y-1">
+            <li><strong>1 Penulis:</strong> Menurut Santoso (2024), ... atau ... (Santoso, 2024).</li>
+            <li><strong>2 Penulis:</strong> Saharjo dan Nurhayati (2006) menyatakan... atau ... (Saharjo &amp;
+              Nurhayati, 2006).</li>
+            <li><strong>3 Penulis atau lebih:</strong> Balagadde dkk. (2008) melaporkan... atau ... (Balagadde dkk.,
+              2008).</li>
+          </ul>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+          <div class="font-heading font-bold text-slate-900 dark:text-white mb-1">2. Penulisan Daftar Pustaka</div>
+          <ul class="list-disc pl-4 space-y-1">
+            <li><strong>Jurnal Ilmiah:</strong> Balagadde, F. K., dkk. (2008). Judul Artikel. <em>Nama Jurnal</em>,
+              14(2), 45–53.</li>
+            <li><strong>Buku Teks:</strong> Saharjo, B. H., &amp; Nurhayati, A. D. (2006). <em>Pengelolaan Limbah
+                Pertanian</em>. Bogor: IPB Press.</li>
+            <li><strong>Sumber Web Kredibel:</strong> Lembaga resmi (.go.id, .ac.id, .edu, Google Scholar,
+              ScienceDirect, BRIN).</li>
+          </ul>
+        </div>
+        <div
+          class="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200">
+          <strong>Hindari Sumber Tidak Ilmiah:</strong> Wikipedia (<code>wikipedia.org</code>) dan blog pribadi
+          (<code>blogspot</code>, <code>wordpress</code>) otomatis ditandai oleh sistem validasi editor.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: KONFIRMASI AKSI (CUSTOM MAHEDALAB DIALOG) -->
+  <div id="modalConfirm"
+    class="hidden fixed inset-0 z-[55] bg-slate-900/65 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      class="modal-enter bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-start gap-3">
+        <div id="confirmModalIconWrap"
+          class="w-10 h-10 rounded-2xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 id="confirmModalTitle" class="font-heading font-extrabold text-base text-slate-900 dark:text-white">
+            Konfirmasi</h3>
+          <div id="confirmModalMessage" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mt-1.5"></div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeModal('modalConfirm')"
+          class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-xs font-heading font-bold text-slate-700 dark:text-slate-200">Batal</button>
+        <button type="button" id="confirmModalOkBtn" onclick="executeConfirmModal()"
+          class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-heading font-bold shadow-sm">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] toast-in">
+    <div id="toastInner"
+      class="px-5 py-3 rounded-2xl shadow-xl border text-xs font-heading font-bold flex items-center gap-2.5 bg-slate-900 text-white border-slate-700">
+    </div>
+  </div>
+
+  <!-- Application Configuration & Script -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
